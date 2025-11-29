@@ -1,0 +1,219 @@
+Prompt for Codex — “Is This Website Down?” Web App
+
+PROMPT START
+
+Build a complete “Is This Website Down?” web application.
+
+Architecture
+
+Frontend: React + TypeScript + Vite
+
+Backend: Node.js (Express) or Python (FastAPI) — choose one and implement
+
+Backend performs actual availability checks (browser cannot)
+
+Styling: TailwindCSS
+
+Provide Dockerfile(s) for frontend and backend
+
+Provide docker-compose.yml
+
+Must be deployable on GCP Cloud Run
+
+Clean, simple folder structure
+
+Purpose
+
+The tool must tell the user whether a website is UP or DOWN by performing real HTTP checks from the backend.
+
+The focus:
+Simple, reliable, fast, and clear results — not a full uptime monitor (separate tool).
+
+Core Features
+1. Basic Website Status Check
+
+The backend must perform:
+
+DNS resolution
+
+HTTP HEAD or GET request (configurable)
+
+Redirection following (max 5)
+
+SSL certificate check (if HTTPS)
+
+Response time measurement
+
+The result must classify the website as:
+
+UP (reachable, valid 2xx–3xx)
+
+DOWN (timeout, unreachable, no DNS)
+
+ERROR (5xx, SSL errors, malformed redirect chain)
+
+Return JSON:
+
+{
+  "target": "https://example.com",
+  "ip": "93.184.216.34",
+  "status": "UP",
+  "http_status": 200,
+  "response_time_ms": 142,
+  "resolved_url": "https://example.com",
+  "redirect_chain": ["http://example.com", "https://example.com"],
+  "ssl": {
+    "used": true,
+    "valid": true,
+    "expires": "2025-03-01T12:00:00Z",
+    "days_remaining": 43
+  },
+  "timestamp": "2025-01-01T12:00:00Z"
+}
+
+2. DNS Resolution
+
+Before checking, backend resolves:
+
+A
+
+AAAA
+
+CNAME
+
+If DNS fails → result = DOWN
+
+3. Response-Time Reporting
+
+Show:
+
+total response time
+
+per-phase timing (DNS, TCP, SSL), if supported
+
+4. Error Handling
+
+Provide human-readable messages for:
+
+no DNS
+
+connection refused
+
+timeout
+
+SSL error
+
+bad redirect chain
+
+malformed URL
+
+Frontend Requirements
+Main UI
+
+Input field: website URL
+
+Button: “Check if the site is down”
+
+Display a big, bold UP/DOWN result
+
+Under the main result, display:
+
+HTTP status
+
+Response time
+
+Resolved IP
+
+Redirect chain
+
+SSL validity + days remaining
+
+UX Additions
+
+Dark/light mode toggle
+
+Example quick buttons:
+
+google.com
+
+wikipedia.org
+
+github.com
+
+Local history (last 5 checks) stored in localStorage
+
+Proper validation for malformed URLs
+
+Loading indicator
+
+Backend Requirements
+Endpoints
+1. GET /check?url=https://example.com
+
+Backend performs:
+
+URL validation
+
+DNS lookup
+
+HTTP request with timeout (max 10s)
+
+Redirect following (max 5)
+
+SSL certificate extraction
+
+Return JSON result as specified above.
+
+Safety Rules
+
+Reject:
+
+private IPs
+
+localhost
+
+internal networks
+
+invalid or empty URLs
+
+Limit:
+
+max 1 request per 3 seconds per IP (basic rate limit)
+
+DevOps & Deliverables
+
+Provide:
+
+Full frontend source code
+
+Full backend source code
+
+Dockerfile (frontend)
+
+Dockerfile (backend)
+
+docker-compose.yml
+
+Tailwind config, Vite config, tsconfig
+
+README with:
+
+local setup
+
+Docker usage
+
+Cloud Run deployment
+
+Example responses
+
+Unit tests for backend:
+
+DNS failure
+
+timeout
+
+redirect chain logic
+
+SSL parsing
+
+PROMPT END
